@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class YouTube {
 
-    private static final String API_KEY = "AIzaSyDD37JtcQg44gOfeN3GatwCicDCPoW_-QM";
+    private static final String API_KEY = "API_KEY";
     private static final String SEARCH_URL = "https://www.googleapis.com/youtube/v3/search";
 
     public static String[] audioId;
