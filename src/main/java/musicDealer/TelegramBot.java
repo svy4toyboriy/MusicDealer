@@ -28,7 +28,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Override
     public String getBotToken() {
         // TODO
-        return "6216419927:AAHiT0ICNp3EXEupBv2MzgdqZLAiSwVzOuY";
+        return "TOKEN";
     }
 
     private static final long CHAT_ID = 988579942;
