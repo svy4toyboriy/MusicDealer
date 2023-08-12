@@ -1,14 +1,12 @@
 package musicDealer;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+
 
 public class Console {
     public static void call(String fileName, String songUrl) throws IOException {
-        Process process = Runtime.getRuntime().exec("cmd /c  yt-dlp -x --audio-format mp3" +
-                " --audio-quality 0 -P D:\\Audio\\downloads -o " + fileName + ".mp3 " + songUrl,
+        Process process = Runtime.getRuntime().exec("cmd /c  yt-dlp" +
+                        " -f \"bestaudio[filesize<49M][ext=m4a]\" -P D:\\Audio\\downloads -o " + fileName + ".m4a " + songUrl,
                 null, new File("D:\\Audio\\"));
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line = "";

@@ -31,8 +31,8 @@ public class TelegramBot extends TelegramLongPollingBot {
         return "6216419927:AAHiT0ICNp3EXEupBv2MzgdqZLAiSwVzOuY";
     }
 
-    private static final long CHAT_ID = 988579942;
     private static final int RESULTS_AMOUNT = 5;
+    public static long CHAT_ID;
 
     public static boolean isStart(Update update) {
         return update.getMessage().getText().compareTo("/start") == 0;
@@ -42,6 +42,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             if (isStart(update)) {
+                CHAT_ID = update.getMessage().getChatId();
                 SendMessage sendMessage = new SendMessage();
                 sendMessage.setChatId(CHAT_ID);
                 sendMessage.setText("I'm ready. Go ahead!");
@@ -52,6 +53,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 }
                 return;
             }
+
             String text = update.getMessage().getText() + " audio";
             String Query = URLEncoder.encode(text, StandardCharsets.UTF_8);
             try {
@@ -66,8 +68,9 @@ public class TelegramBot extends TelegramLongPollingBot {
                 String song = YouTube.audioTitle[i];
                 Buttons.addButton(rows, song, i + 1);
             }
+
             keyboard.setKeyboard(rows);
-            
+            CHAT_ID = update.getMessage().getChatId();
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(CHAT_ID);
             sendMessage.setReplyMarkup(keyboard);
@@ -77,7 +80,6 @@ public class TelegramBot extends TelegramLongPollingBot {
             } catch (TelegramApiException e) {
                 throw new RuntimeException(e);
             }
-
         } else if (update.hasCallbackQuery()) {
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(CHAT_ID);
@@ -91,10 +93,15 @@ public class TelegramBot extends TelegramLongPollingBot {
             int buttonNumber = Integer.parseInt(update.getCallbackQuery().getData()) - 1;
             String fileName = YouTube.audioTitle[buttonNumber].replaceAll("[^\\da-zA-Zа-яёА-ЯЁ]", "");
             String songUrl = YouTube.audioUrl[buttonNumber];
-            try {
-                Console.call(fileName, songUrl);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+
+            String audioPath = "D:\\Audio\\downloads\\" + fileName + ".m4a";
+            File file = new File(audioPath);
+            if (!file.exists()) {
+                try {
+                    Console.call(fileName, songUrl);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
             sendMessage.setText("Uploading...");
@@ -104,10 +111,8 @@ public class TelegramBot extends TelegramLongPollingBot {
                 throw new RuntimeException(e);
             }
 
-            String audioPath = "D:\\Audio\\downloads\\" + fileName + ".mp3";
-            File file = new File(audioPath);
             InputFile inputFile = new InputFile(file, audioPath);
-            
+            System.out.println(audioPath);
             SendAudio audio = new SendAudio();
             audio.setChatId(CHAT_ID);
             audio.setAudio(inputFile);
