@@ -36,6 +36,7 @@ public class YouTube {
             StringBuilder title = new StringBuilder();
             int index = 0;
             for(int i = 0; i < maxResults; i++) {
+
                 index = inputLine.indexOf("videoId", index) + 11;
                 audioId[i] = inputLine.substring(index, index + 11);
 
